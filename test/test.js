@@ -1,35 +1,68 @@
 import MonkeyRunner from '../src/index.js';
-import Input from '../src/Input.js';
-import {exec} from 'child_process'
 
+const deviceId = 'd53ef30';
+//const deviceId = '4387cae1';
+const cmd = '-v 10000';
 
-const deviceId = '4387cae1';
-const cmd = '-v 100';
-const path = '测试计划-测试案例';
-const monkey = new MonkeyRunner(deviceId,cmd,path);
+const monkey = new MonkeyRunner(deviceId,cmd);
 
-monkey.monkey();
+monkey.checkInput().then(command=>{
+	console.log(command)
+	if(command === false)
+		return;
+	console.log('Hello')
+	monkey.monkey().then(result=>{
+		//console.log(result)
+		const resultAnalyse = monkey.getResult()
 
-const runner = monkey.getRunner();
-const stdout = monkey.getStdout();
-const stderr = monkey.getStderr();
+		console.log(resultAnalyse)
+	},err=>{
+		console.log('Err')
+	})
 
-var result ;
+	const stdout = monkey.getStdout()
 
-if(stderr){
-    stderr.on('data',(data)=>{
-        console.log(data)
-    })
-}
+	if(stdout){
+	    stdout.on('data',(data)=>{
+	        //console.log(data)
+	    })
+	}
+})
 
-if(stdout){
-    stdout.on('data',(data)=>{
-        console.log(data)
-    })
-}
+//console.log(check)
 
-if(runner){
-    runner.on('close',(code)=>{
-        console.log('closing code'+code)
-    })
-}
+//monkey.monkey()
+
+// .then(()=>{
+// 		console.log('Hello Then')
+// 		const result = monkey.getResult()
+// 		//console.log(result)
+// 		console.log('结果输出完整')
+// 	},err=>{
+// 		console.log(err)
+// 	})
+
+// const runner = monkey.getRunner();
+// const stdout = monkey.getStdout()
+// const stderr = monkey.getStderr();
+//
+// console.log('runner '+runner)
+//
+// if(stderr){
+//     stderr.on('data',(data)=>{
+//         console.log(data)
+//     })
+// }
+//
+// if(stdout){
+//     stdout.on('data',(data)=>{
+//         console.log(data)
+//     })
+// }
+//
+// if(runner){
+//     runner.on('close',(code)=>{
+//         console.log('closing code'+code)
+// 		console.log(stdout)
+//     })
+// }
