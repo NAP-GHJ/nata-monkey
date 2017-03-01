@@ -6,9 +6,8 @@ import fs from 'fs'
 class MonkeyRunner{
   constructor(deviceId,command){
     /*Monkey的配置运行数据
-    deviceId:设备信息
-    command:运行参数
-    path：路径信息
+        deviceId:设备信息
+        command:运行参数
     */
     this.deviceId = deviceId;
     this.command = command;
@@ -19,15 +18,14 @@ class MonkeyRunner{
     this.stderr = undefined;
     this.stdin = undefined;
 
-	/*分析静态结果*/
-	this.result = undefined
-	this.resultAnalyse = undefined
+    /*分析静态结果*/
+    this.result = undefined
+    this.resultAnalyse = undefined
 	// this.seed = undefined
 	// this.actionList = []
 	// this.activityList = []
 	// this.summaryList = []
 	// this.exception = undefined
-
   }
 
   // get runner(){
@@ -63,7 +61,6 @@ class MonkeyRunner{
   // }
 
   getRunner(){
-	  console.log('Hello2')
 	  return this.runner
   }
 
@@ -79,14 +76,16 @@ class MonkeyRunner{
     return this.stdout
   }
 
-	getResult(){
+	getResult(_result){
+     this.result = _result
 	   this.resultAnalyse = new Result(this.result).analysis()
+       return this.resultAnalyse
 	}
 
 	async checkInput(){
 		const commandInput = new Input(this.deviceId,this.command)
 		const command = await commandInput.toString()
-		console.log(command)
+
 		if(command === false){
 			return false
 		}
@@ -100,14 +99,15 @@ class MonkeyRunner{
 	* @param  {String} cmd to run
 	* @return {Promise} stdout || stderr
 	*/
-	monkey(){
+	monkey(_command){
+    this.command = _command;
+    console.log(this.command)
 		return new Promise((resolve,reject)=>{
 			  this.run(this.command).then((data)=>{
 
 				  this.result = data
 				  resolve(this.result)
-				  //console.log(data)
-				  console.log("执行结束")
+				  
 			  },err=>{
 				  reject(err)
 			  })
@@ -126,10 +126,10 @@ class MonkeyRunner{
         }
       })
 
-	  this.stdin = this.runner.stdin;
-	  this.stdout = this.runner.stdout;
-	  this.stderr = this.runner.stderr;
-	  console.log('Hello1')
+      this.stdin = this.runner.stdin;
+      this.stdout = this.runner.stdout;
+      this.stderr = this.runner.stderr;
+
     })
   }
 

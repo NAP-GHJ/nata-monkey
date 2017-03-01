@@ -1,34 +1,60 @@
-import MonkeyRunner from '../src/index.js';
+import MonkeyRunner from '../';
 
-const deviceId = 'd53ef30';
-//const deviceId = '4387cae1';
-const cmd = '-v 10000';
+describe('Test monkey', () => {
+	
+	const deviceId = 'ZTEBV0730';
+	const cmd = '-v 100';
+	let command,result;
+	let monkey;
 
-const monkey = new MonkeyRunner(deviceId,cmd);
-
-monkey.checkInput().then(command=>{
-	console.log(command)
-	if(command === false)
-		return;
-	console.log('Hello')
-	monkey.monkey().then(result=>{
-		//console.log(result)
-		const resultAnalyse = monkey.getResult()
-
-		console.log(resultAnalyse)
-	},err=>{
-		console.log('Err')
+	before(()=>{
+		monkey = new MonkeyRunner(deviceId,cmd)
 	})
 
-	const stdout = monkey.getStdout()
+	it('check input', function(done) {
+		monkey.checkInput().then(_command=>{
+			command = _command;	
+			done()
+		})
+	})
 
-	if(stdout){
-	    stdout.on('data',(data)=>{
-	        //console.log(data)
-	    })
-	}
+	it('run monkey',function(done){
+		if(command !== false){
+			monkey.monkey(command).then(_result => {
+				// console.log(result)
+				result = _result;
+				done();
+			})
+
+			let runner = monkey.getRunner()
+			let stdout = monkey.getStdout()
+
+			if(stdout){
+    			stdout.on('data',(data)=>{
+        		//console.log(data)
+    			})
+			}
+
+			if(runner){
+				runner.on('close',(code)=>{
+					//console.log('closing code'+code)
+				})
+			}
+		}
+	})
+
+	it('analyse result',(done)=>{
+		const _result = monkey.getResult(result)
+		console.log(_result)	
+		done()
+	})
+
 })
 
+/**
+ * npm run compile
+ * mocha --compilers js:babel-core/register test/getOnlineDevices.test.js
+ */
 //console.log(check)
 
 //monkey.monkey()

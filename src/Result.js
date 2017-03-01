@@ -9,19 +9,20 @@ class Result{
 	}
 
 	analysis(){
-		console.log('\n'+this.result)
-		const array = this.result.split(/\r\r\n/)
+		//console.log('\n'+this.result)
+		const array = this.result.split(/\r\n/)
+		//console.log(array)
 		this.seed = this.getSeed(array[0])
-		console.log(`Analysis: seed is ${this.seed}`)
+		//console.log(`Analysis: seed is ${this.seed}`)
 		array.forEach(element=>{
 			if(element.indexOf(':Sending')!= -1){
 				const action = this.getAction(element)
-				console.log(`Analysis: action is ${action}`)
+				//console.log(`Analysis: action is ${action}`)
 				this.actionList.push(action)
 				this.summaryList.push(`Action: ${action}`)
 			}else if(element.indexOf('// Allowing') != -1){
 				const activity = this.getActivity(element)
-				console.log(`Analysis: activity is ${activity}`)
+				//console.log(`Analysis: activity is ${activity}`)
 				this.activityList.push(activity)
 				this.summaryList.push(`Activity: ${activity}`)
 			}
